@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------------------
+# Ingress (Layer 7 Test)
+# AKO translates this into L7 Rules on a Shared or Dedicated Virtual Service.
+# NOTE: Ensure 'ingressClassName' matches your AKO values.yaml (default is 'avi-lb').
+# ---------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: avi-hello-ingress
+  namespace: default
+  annotations:
+    ako.vmware.com/enable-tls: "false"
+spec:
+  ingressClassName: avi-lb
+  rules:
+  - host: hello.110.ams.avilab.eu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: avi-hello-svc
+            port:
+              number: 80
+  - host: hello2.110.ams.avilab.eu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: avi-hello-svc
+            port:
+              number: 80

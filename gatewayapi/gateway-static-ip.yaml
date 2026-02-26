@@ -1,0 +1,22 @@
+kind: Gateway
+metadata:
+  name: gw-multiple-listeners-static-ip
+spec:
+  addresses:
+    - type: IPAddress
+      value: 192.168.201.13
+  gatewayClassName: avi-lb
+  listeners:
+    - name: foo-http
+      protocol: HTTP
+      port: 80
+      hostname: static-ip.app.avi.com
+    - name: bar-https
+      protocol: HTTPS
+      port: 443
+      tls:
+        certificateRefs:
+          - kind: Secret
+            group: ''
+            name: cert01
+      hostname: static-ip.app.avi.com

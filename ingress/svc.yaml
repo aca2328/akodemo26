@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------------------
+# Service: LoadBalancer (Layer 4 Test)
+# AKO will provision a dedicated Virtual Service and VIP for this.
+# Annotation 'avi_proxy' is optional but often used for Proxy Protocol.
+# ---------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: avi-hello-l4
+  namespace: default
+  labels:
+    app: avi-hello
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: avi-hello

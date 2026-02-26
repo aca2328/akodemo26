@@ -1,0 +1,59 @@
+apiVersion: ako.vmware.com/v1alpha2
+kind: L7Rule
+metadata:
+  name: l7
+  namespace: default
+spec:
+  # Basic settings
+  allowInvalidClientCert: true
+  closeClientConnOnConfigUpdate: false
+  ignPoolNetReach: true
+  removeListeningPortOnVsDown: false
+  sslSessCacheAvgSize: 4096
+
+  # Performance limits
+  performanceLimits:
+    maxConcurrentConnections: 5000
+    maxThroughput: 10000
+
+  # Profile references
+  analyticsProfile:
+    kind: AviRef
+    name: "logexternal"
+
+  applicationProfile:
+    kind: AviRef
+    name: "demo"
+
+  wafPolicy:
+    kind: AviRef
+    name: "ids"
+
+  # Analytics policy
+  analyticsPolicy:
+    fullClientLogs:
+      enabled: true
+      throttle: MEDIUM
+      duration: 3600
+    logAllHeaders: true
+
+---
+
+apiVersion: ako.vmware.com/v1beta1
+kind: HostRule
+metadata:
+  name: securehost
+  namespace: default
+spec:
+  virtualhost:
+    fqdn: hello.110.ams.avilab.eu # mandatory
+    fqdnType: Exact
+    enableVirtualHost: true
+    l7Rule: l7
+    tls:
+      sslKeyCertificate:
+        name: newssl
+        type: ref
+      sslProfile: TLSsecure
+      termination: edge
+

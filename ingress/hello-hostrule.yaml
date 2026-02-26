@@ -1,0 +1,23 @@
+apiVersion: ako.vmware.com/v1beta1
+kind: HostRule
+metadata:
+  name: hello-hr
+  namespace: default
+spec:
+  virtualhost:
+    fqdn: hello.110.ams.avilab.eu # mandatory
+    fqdnType: Exact
+    enableVirtualHost: true
+    applicationProfile: demo
+    wafPolicy: ids
+    analyticsProfile: logexternal
+    tls:
+      sslKeyCertificate:
+        name: newssl
+        type: ref
+        alternateCertificate:
+          name: System-Default-Cert
+          type: ref
+      sslProfile: TLSsecure
+      termination: edge
+

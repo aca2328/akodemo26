@@ -1,0 +1,16 @@
+kind: HTTPRoute
+metadata:
+  name: my-http-app-v2
+spec:
+  parentRefs:
+    - name: gw-multiple-listeners
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: svc-v2
+          port: 80
+  hostnames:
+    - gw-v2.app.avi.com

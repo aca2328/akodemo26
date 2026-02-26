@@ -1,0 +1,35 @@
+# Ignore sensitive configuration files
+values-secret.yaml
+.env
+
+# Ignore local development files
+*.log
+*.swp
+*.swo
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+.DS_Store
+
+# Ignore local build and dependency directories
+node_modules/
+bower_components/
+dist/
+build/
+
+# Ignore environment specific files
+.env*.local
+
+# Ignore secrets and credentials
+*.secret
+*.key
+*.pem
+
+# Ignore Helm secrets
+secrets/
+chart-secrets/
+
+# Ignore local overrides
+values-override.yaml
+custom-values.yaml
