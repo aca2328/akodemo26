@@ -124,10 +124,12 @@ while true; do
     echo "6. Deploy TLS Ingress (Optional)"
     echo "7. Manage TLS Secret for hello.110.ams.avilab.eu"
     echo "8. Manage TLS Secret for hello2.110.ams.avilab.eu"
-    echo "9. Verify All Deployments"
+    echo "9. View AKO Logs"
+    echo "v. Verify All Deployments"
+    echo "d. Delete ALL Resources"
     echo "x. Exit"
     echo "=========================================="
-    echo -n "Press key (1-9, x): "
+    echo -n "Press key (1-9, v, d, x): "
     read -n 1 choice
     echo
     
@@ -169,6 +171,45 @@ while true; do
             manage_tls_secret "hello2.110.ams.avilab.eu" "hello2.110.ams.avilab.eu"
             ;;
         9)
+            echo "Viewing AKO logs..."
+            echo "=========================================="
+            kubectl logs ako-0 -n avi-system --tail=50
+            echo "=========================================="
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        d|D)
+            echo "Deleting ALL ingress resources..."
+            echo "This will delete deployments, services, ingress, hostrules, and TLS secrets"
+            read -p "Are you sure you want to delete ALL resources (y/n)? " choice
+            if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                echo "Deleting deployments..."
+                kubectl delete deployment avi-hello-world -n default 2>/dev/null || true
+                
+                echo "Deleting services..."
+                kubectl delete service avi-hello-svc -n default 2>/dev/null || true
+                kubectl delete service avi-hello-l4 -n default 2>/dev/null || true
+                
+                echo "Deleting ingress..."
+                kubectl delete ingress avi-hello-ingress -n default 2>/dev/null || true
+                kubectl delete ingress tls-avi-hello-ingress -n default 2>/dev/null || true
+                
+                echo "Deleting hostrules..."
+                kubectl delete hostrule hello-hr -n default 2>/dev/null || true
+                kubectl delete hostrule hello2-hr -n default 2>/dev/null || true
+                
+                echo "Deleting TLS secrets..."
+                kubectl delete secret hello.110.ams.avilab.eu -n default 2>/dev/null || true
+                kubectl delete secret hello2.110.ams.avilab.eu -n default 2>/dev/null || true
+                
+                echo "All resources deleted successfully!"
+            else
+                echo "Delete operation cancelled."
+            fi
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        v|V)
             echo "Verifying deployments..."
             echo "Deployments:"
             kubectl get deployments -n default | grep avi-hello-world || echo "Not found"
