@@ -34,7 +34,7 @@ deploy_resource() {
             echo "=========================================="
             kubectl get $resource_type -n default -o wide | grep $resource_name || echo "Resource successfully deleted"
             echo "=========================================="
-            echo -n "Press any key to return to main menu..."
+            echo -n "Press any key to continue..."
             read -n 1 -s
             return 0
         else
