@@ -19,7 +19,9 @@ deploy_resource() {
     echo "Checking if $resource_name exists..."
     if resource_exists $resource_type $resource_name; then
         echo "$resource_name already exists."
-        read -p "Do you want to delete it first? (y/n): " choice
+        echo -n "Do you want to delete it (y/n)? "
+        read -n 1 choice
+        echo
         if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
             echo "Deleting $resource_name..."
             kubectl delete $resource_type $resource_name -n default
