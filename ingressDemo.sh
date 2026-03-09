@@ -28,19 +28,13 @@ deploy_resource() {
                 return 1
             fi
             sleep 2
-            echo "Deploying $resource_name..."
-            kubectl apply -f $resource_file
-            if [ $? -ne 0 ]; then
-                echo "Error: Failed to deploy $resource_name"
-                return 1
-            fi
-            
-            # Show the applied resource
-            echo ""
-            echo "Successfully deployed $resource_name. Resource details:"
+            echo "Resource deleted. Current status:"
             echo "=========================================="
-            cat $resource_file
+            kubectl get $resource_type -n default -o wide | grep $resource_name || echo "Resource successfully deleted"
             echo "=========================================="
+            echo -n "Press any key to return to main menu..."
+            read -n 1 -s
+            return 0
         else
             echo "Skipping $resource_name."
         fi
