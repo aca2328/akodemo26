@@ -163,10 +163,10 @@ while true; do
             read -n 1 -s
             ;;
         7)
-            manage_tls_secret "certif1" "hello.110.ams.avilab.eu"
+            manage_tls_secret "hello.110.ams.avilab.eu" "hello.110.ams.avilab.eu"
             ;;
         8)
-            manage_tls_secret "certif2" "hello2.110.ams.avilab.eu"
+            manage_tls_secret "hello2.110.ams.avilab.eu" "hello2.110.ams.avilab.eu"
             ;;
         9)
             echo "Verifying deployments..."
@@ -179,7 +179,7 @@ while true; do
             echo "HostRules:"
             kubectl get hostrules -n default | grep hello || echo "Not found"
             echo "TLS Secrets:"
-            kubectl get secrets -n default | grep -E "(certif1|certif2)" || echo "No TLS secrets found"
+            kubectl get secrets -n default | grep -E "(hello.110.ams.avilab.eu|hello2.110.ams.avilab.eu)" || echo "No TLS secrets found"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
