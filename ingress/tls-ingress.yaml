@@ -6,30 +6,37 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: avi-hello-ingress
+  name: tls-avi-hello-ingress
   namespace: default
   annotations:
     ako.vmware.com/enable-tls: "false"
 spec:
   ingressClassName: avi-lb
+  tls:
+    - hosts:
+        - hello.110.ams.avilab.eu
+      secretName: hello.110.ams.avilab.eu
+    - hosts:
+        - hello2.110.ams.avilab.eu
+      secretName: hello2.110.ams.avilab.eu
   rules:
-  - host: hello.110.ams.avilab.eu
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: avi-hello-svc
-            port:
-              number: 80
-  - host: hello2.110.ams.avilab.eu
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: avi-hello-svc
-            port:
-              number: 80
+    - host: hello.110.ams.avilab.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: avi-hello-svc
+                port:
+                  number: 80
+    - host: hello2.110.ams.avilab.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: avi-hello-svc
+                port:
+                  number: 80
