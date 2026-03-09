@@ -158,7 +158,7 @@ while true; do
             read -n 1 -s
             ;;
         6)
-            deploy_resource "avi-hello-ingress" "ingress/tls-ingress.yaml" "ingress"
+            deploy_resource "tls-avi-hello-ingress" "ingress/tls-ingress.yaml" "ingress"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
@@ -175,7 +175,7 @@ while true; do
             echo "Services:"
             kubectl get services -n default | grep avi-hello || echo "Not found"
             echo "Ingress:"
-            kubectl get ingress -n default | grep avi-hello-ingress || echo "Not found"
+            kubectl get ingress -n default | grep -E "(avi-hello-ingress|tls-avi-hello-ingress)" || echo "Not found"
             echo "HostRules:"
             kubectl get hostrules -n default | grep hello || echo "Not found"
             echo "TLS Secrets:"
