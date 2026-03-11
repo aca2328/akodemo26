@@ -8,7 +8,7 @@ spec:
     - name: foo-http
       protocol: HTTP
       port: 80
-      hostname: '*.app.avi.com'
+      hostname: '*.110.ams.avilab.eu'
     - name: bar-https
       protocol: HTTPS
       port: 443
@@ -16,5 +16,5 @@ spec:
         certificateRefs:
           - kind: Secret
             group: ''
-            name: cert01
-      hostname: '*.app.avi.com'
+            name: wilcardcert
+      hostname: '*.110.ams.avilab.eu'
