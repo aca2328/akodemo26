@@ -6,7 +6,7 @@ spec:
   parentRefs:
     - name: gw-multiple-listeners
   hostnames:
-    - "gw-migration.mydomain.com"
+    - "gw-migration.110.ams.avilab.eu"
   rules:
     - matches:
         - path:

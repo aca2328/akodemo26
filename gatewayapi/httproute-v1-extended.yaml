@@ -31,4 +31,4 @@ spec:
                 kind: RouteBackendExtension
                 name: my-route-backend-extension
   hostnames:
-    - gw-v1.app.avi.com
+    - gw-v1.110.ams.avilab.eu
