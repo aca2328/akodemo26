@@ -13,4 +13,4 @@ spec:
         - name: svc-v2
           port: 80
   hostnames:
-    - gw-v2.app.avi.com
+    - app-v2.110.ams.avilab.eu
