@@ -241,7 +241,6 @@ while true; do
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
-=======
         d|D)
             deploy_resource "avi-httproute-v1" "gatewayapi/httproute-v1.yaml" "httproute"
             echo -n "Press any key to continue..."
