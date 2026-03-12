@@ -83,9 +83,11 @@ while true; do
     echo "p. Deploy RouteBackendExtension"
     echo "q. Deploy AVIInfrasetting"
     echo "r. Verify All Deployments"
+    echo "s. View AKO Logs"
+    echo "d. Delete ALL Resources"
     echo "x. Exit"
     echo "=========================================="
-    echo -n "Press key (a-x): "
+    echo -n "Press key (a-x, s, d): "
     read -n 1 choice
     echo
     
@@ -185,6 +187,57 @@ while true; do
             kubectl get httproutes -n default || echo "Not found"
             echo "Services:"
             kubectl get services -n default | grep avi-service || echo "Not found"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        s|S)
+            echo "Viewing AKO logs..."
+            echo "=========================================="
+            kubectl logs ako-0 -n avi-system --tail=50
+            echo "=========================================="
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        d|D)
+            echo "Deleting ALL gateway resources..."
+            echo "This will delete deployments, services, gateways, httproutes, etc."
+            read -p "Are you sure you want to delete ALL resources (y/n)? " choice
+            if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                echo "Deleting deployments..."
+                kubectl delete deployment avi-hello-world -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v1 -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v2 -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting services..."
+                kubectl delete service avi-hello-svc -n default 2>/dev/null || true
+                kubectl delete service svc-v1 -n default 2>/dev/null || true
+                kubectl delete service svc-v2 -n default 2>/dev/null || true
+                kubectl delete service svc-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting gateways..."
+                kubectl delete gateway gw-sec -n default 2>/dev/null || true
+                kubectl delete gateway gw-multiple-listeners -n default 2>/dev/null || true
+                kubectl delete gateway gw-multiple-listeners-static-ip -n default 2>/dev/null || true
+                
+                echo "Deleting httproutes..."
+                kubectl delete httproute my-http-app-v1 -n default 2>/dev/null || true
+                kubectl delete httproute my-http-app-v2 -n default 2>/dev/null || true
+                kubectl delete httproute my-http-app-v2-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting healthmonitors..."
+                kubectl delete healthmonitor my-health-monitor -n default 2>/dev/null || true
+                
+                echo "Deleting routebackendextensions..."
+                kubectl delete routebackendextension my-route-backend-extension -n default 2>/dev/null || true
+                
+                echo "Deleting aviinfrasettings..."
+                kubectl delete aviinfrasetting toDmz -n default 2>/dev/null || true
+                
+                echo "All gateway resources deleted successfully!"
+            else
+                echo "Delete operation cancelled."
+            fi
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
