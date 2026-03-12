@@ -84,10 +84,10 @@ while true; do
     echo "q. Deploy AVIInfrasetting"
     echo "r. Verify All Deployments"
     echo "s. View AKO Logs"
-    echo "d. Delete ALL Resources"
-    echo "x. Exit"
+    echo "x. Delete ALL Resources"
+    echo "z. Exit"
     echo "=========================================="
-    echo -n "Press key (a-x, s, d): "
+    echo -n "Press key (a-z, s, x): "
     read -n 1 choice
     echo
     
@@ -241,7 +241,271 @@ while true; do
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
+=======
+        d|D)
+            deploy_resource "avi-httproute-v1" "gatewayapi/httproute-v1.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        e|E)
+            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-v1-extended.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        f|F)
+            deploy_resource "avi-httproute-v2" "gatewayapi/httproute-v2.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        g|G)
+            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-v2-v3.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        h|H)
+            deploy_resource "avi-service-v1" "gatewayapi/service-v1.yaml" "service"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        i|I)
+            deploy_resource "avi-service-v2" "gatewayapi/service-v2.yaml" "service"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        j|J)
+            deploy_resource "avi-service-v3" "gatewayapi/service-v3.yaml" "service"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        k|K)
+            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-v1.yaml" "deployment"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        l|L)
+            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-v2.yaml" "deployment"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        m|M)
+            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-v3.yaml" "deployment"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        n|N)
+            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor.yaml" "healthmonitor"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        o|O)
+            deploy_resource "avi-l7rule" "gatewayapi/l7rule.yaml" "l7rule"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        p|P)
+            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension.yaml" "routebackendextension"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        q|Q)
+            deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting.yaml" "aviinfrasetting"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        r|R)
+            echo "Verifying deployments..."
+            echo "Deployments:"
+            kubectl get deployments -n default | grep avi-hello-world || echo "Not found"
+            echo "Gateways:"
+            kubectl get gateways -n default || echo "Not found"
+            echo "HTTPRoutes:"
+            kubectl get httproutes -n default || echo "Not found"
+            echo "Services:"
+            kubectl get services -n default | grep avi-service || echo "Not found"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        s|S)
+            echo "Viewing AKO logs..."
+            echo "=========================================="
+            kubectl logs ako-0 -n avi-system --tail=50
+            echo "=========================================="
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
         x|X)
+            echo "Deleting ALL gateway resources..."
+            echo "This will delete deployments, services, gateways, httproutes, etc."
+            read -p "Are you sure you want to delete ALL resources (y/n)? " choice
+            if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                echo "Deleting deployments..."
+                kubectl delete deployment avi-hello-world -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v1 -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v2 -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting services..."
+                kubectl delete service avi-hello-svc -n default 2>/dev/null || true
+                kubectl delete service svc-v1 -n default 2>/dev/null || true
+                kubectl delete service svc-v2 -n default 2>/dev/null || true
+                kubectl delete service svc-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting gateways..."
+                kubectl delete gateway gw-sec -n default 2>/dev/null || true
+                kubectl delete gateway gw-multiple-listeners -n default 2>/dev/null || true
+                kubectl delete gateway gw-multiple-listeners-static-ip -n default 2>/dev/null || true
+                
+                echo "Deleting httproutes..."
+                kubectl delete httproute my-http-app-v1 -n default 2>/dev/null || true
+                kubectl delete httproute my-http-app-v2 -n default 2>/dev/null || true
+                kubectl delete httproute my-http-app-v2-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting healthmonitors..."
+                kubectl delete healthmonitor my-health-monitor -n default 2>/dev/null || true
+                
+                echo "Deleting routebackendextensions..."
+                kubectl delete routebackendextension my-route-backend-extension -n default 2>/dev/null || true
+                
+                echo "Deleting aviinfrasettings..."
+                kubectl delete aviinfrasetting toDmz -n default 2>/dev/null || true
+                
+                echo "All gateway resources deleted successfully!"
+            else
+                echo "Delete operation cancelled."
+            fi
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        e|E)
+            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-v1-extended.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        f|F)
+            deploy_resource "avi-httproute-v2" "gatewayapi/httproute-v2.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        g|G)
+            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-v2-v3.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        h|H)
+            deploy_resource "avi-service-v1" "gatewayapi/service-v1.yaml" "service"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        i|I)
+            deploy_resource "avi-service-v2" "gatewayapi/service-v2.yaml" "service"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        j|J)
+            deploy_resource "avi-service-v3" "gatewayapi/service-v3.yaml" "service"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        k|K)
+            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-v1.yaml" "deployment"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        l|L)
+            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-v2.yaml" "deployment"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        m|M)
+            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-v3.yaml" "deployment"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        n|N)
+            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor.yaml" "healthmonitor"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        o|O)
+            deploy_resource "avi-l7rule" "gatewayapi/l7rule.yaml" "l7rule"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        p|P)
+            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension.yaml" "routebackendextension"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        q|Q)
+            deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting.yaml" "aviinfrasetting"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        r|R)
+            echo "Verifying deployments..."
+            echo "Deployments:"
+            kubectl get deployments -n default | grep avi-hello-world || echo "Not found"
+            echo "Gateways:"
+            kubectl get gateways -n default || echo "Not found"
+            echo "HTTPRoutes:"
+            kubectl get httproutes -n default || echo "Not found"
+            echo "Services:"
+            kubectl get services -n default | grep avi-service || echo "Not found"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        s|S)
+            echo "Viewing AKO logs..."
+            echo "=========================================="
+            kubectl logs ako-0 -n avi-system --tail=50
+            echo "=========================================="
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        d|D)
+            echo "Deleting ALL gateway resources..."
+            echo "This will delete deployments, services, gateways, httproutes, etc."
+            read -p "Are you sure you want to delete ALL resources (y/n)? " choice
+            if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                echo "Deleting deployments..."
+                kubectl delete deployment avi-hello-world -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v1 -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v2 -n default 2>/dev/null || true
+                kubectl delete deployment avi-hello-world-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting services..."
+                kubectl delete service avi-hello-svc -n default 2>/dev/null || true
+                kubectl delete service svc-v1 -n default 2>/dev/null || true
+                kubectl delete service svc-v2 -n default 2>/dev/null || true
+                kubectl delete service svc-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting gateways..."
+                kubectl delete gateway gw-sec -n default 2>/dev/null || true
+                kubectl delete gateway gw-multiple-listeners -n default 2>/dev/null || true
+                kubectl delete gateway gw-multiple-listeners-static-ip -n default 2>/dev/null || true
+                
+                echo "Deleting httproutes..."
+                kubectl delete httproute my-http-app-v1 -n default 2>/dev/null || true
+                kubectl delete httproute my-http-app-v2 -n default 2>/dev/null || true
+                kubectl delete httproute my-http-app-v2-v3 -n default 2>/dev/null || true
+                
+                echo "Deleting healthmonitors..."
+                kubectl delete healthmonitor my-health-monitor -n default 2>/dev/null || true
+                
+                echo "Deleting routebackendextensions..."
+                kubectl delete routebackendextension my-route-backend-extension -n default 2>/dev/null || true
+                
+                echo "Deleting aviinfrasettings..."
+                kubectl delete aviinfrasetting toDmz -n default 2>/dev/null || true
+                
+                echo "All gateway resources deleted successfully!"
+            else
+                echo "Delete operation cancelled."
+            fi
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        z|Z)
             echo "Exiting..."
             exit 0
             ;;

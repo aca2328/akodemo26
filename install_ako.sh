@@ -56,7 +56,6 @@ HELM_REPO_URL="$HELM_REPO_URL"
 EOF
         echo -e "${GREEN}Configuration updated in $CONFIG_FILE${NC}"
 # 3. Install Logic
-=======
     fi
 }
 
