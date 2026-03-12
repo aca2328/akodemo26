@@ -93,87 +93,87 @@ while true; do
     
     case $choice in
         a|A)
-            deploy_resource "avi-hello-world" "gatewayapi/demoapp.yaml" "deployment"
+            deploy_resource "avi-hello-world" "gatewayapi/deployment-avi-hello-world.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         b|B)
-            deploy_resource "avi-gateway" "gatewayapi/gateway.yaml" "gateway"
+            deploy_resource "avi-gateway" "gatewayapi/gateway-gw-multiple-listeners.yaml" "gateway"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         c|C)
-            deploy_resource "avi-gateway-static" "gatewayapi/gateway-static-ip.yaml" "gateway"
+            deploy_resource "avi-gateway-static" "gatewayapi/gateway-gw-multiple-listeners-static-ip.yaml" "gateway"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         d|D)
-            deploy_resource "avi-httproute-v1" "gatewayapi/httproute-v1.yaml" "httproute"
+            deploy_resource "avi-httproute-v1" "gatewayapi/httproute-my-http-app-v1.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         e|E)
-            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-v1-extended.yaml" "httproute"
+            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-my-http-app-v1-extended.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         f|F)
-            deploy_resource "avi-httproute-v2" "gatewayapi/httproute-v2.yaml" "httproute"
+            deploy_resource "avi-httproute-v2" "gatewayapi/httproute-my-http-app-v2.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         g|G)
-            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-v2-v3.yaml" "httproute"
+            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-my-http-app-v2-v3.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         h|H)
-            deploy_resource "avi-service-v1" "gatewayapi/service-v1.yaml" "service"
+            deploy_resource "avi-service-v1" "gatewayapi/service-svc-v1.yaml" "service"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         i|I)
-            deploy_resource "avi-service-v2" "gatewayapi/service-v2.yaml" "service"
+            deploy_resource "avi-service-v2" "gatewayapi/service-svc-v2.yaml" "service"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         j|J)
-            deploy_resource "avi-service-v3" "gatewayapi/service-v3.yaml" "service"
+            deploy_resource "avi-service-v3" "gatewayapi/service-svc-v3.yaml" "service"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         k|K)
-            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-v1.yaml" "deployment"
+            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-avi-hello-world-v1.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         l|L)
-            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-v2.yaml" "deployment"
+            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-avi-hello-world-v2.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         m|M)
-            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-v3.yaml" "deployment"
+            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         n|N)
-            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor.yaml" "healthmonitor"
+            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor-my-health-monitor.yaml" "healthmonitor"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         o|O)
-            deploy_resource "avi-l7rule" "gatewayapi/l7rule.yaml" "l7rule"
+            deploy_resource "avi-l7rule" "gatewayapi/l7rule-gw-sec.yaml" "l7rule"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         p|P)
-            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension.yaml" "routebackendextension"
+            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension-my-route-backend-extension.yaml" "routebackendextension"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         q|Q)
-            deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting.yaml" "aviinfrasetting"
+            deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting-toDmz.yaml" "aviinfrasetting"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
@@ -242,72 +242,72 @@ while true; do
             read -n 1 -s
             ;;
         d|D)
-            deploy_resource "avi-httproute-v1" "gatewayapi/httproute-v1.yaml" "httproute"
+            deploy_resource "avi-httproute-v1" "gatewayapi/httproute-my-http-app-v1.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         e|E)
-            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-v1-extended.yaml" "httproute"
+            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-my-http-app-v1-extended.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         f|F)
-            deploy_resource "avi-httproute-v2" "gatewayapi/httproute-v2.yaml" "httproute"
+            deploy_resource "avi-httproute-v2" "gatewayapi/httproute-my-http-app-v2.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         g|G)
-            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-v2-v3.yaml" "httproute"
+            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-my-http-app-v2-v3.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         h|H)
-            deploy_resource "avi-service-v1" "gatewayapi/service-v1.yaml" "service"
+            deploy_resource "avi-service-v1" "gatewayapi/service-svc-v1.yaml" "service"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         i|I)
-            deploy_resource "avi-service-v2" "gatewayapi/service-v2.yaml" "service"
+            deploy_resource "avi-service-v2" "gatewayapi/service-svc-v2.yaml" "service"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         j|J)
-            deploy_resource "avi-service-v3" "gatewayapi/service-v3.yaml" "service"
+            deploy_resource "avi-service-v3" "gatewayapi/service-svc-v3.yaml" "service"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         k|K)
-            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-v1.yaml" "deployment"
+            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-avi-hello-world-v1.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         l|L)
-            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-v2.yaml" "deployment"
+            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-avi-hello-world-v2.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         m|M)
-            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-v3.yaml" "deployment"
+            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         n|N)
-            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor.yaml" "healthmonitor"
+            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor-my-health-monitor.yaml" "healthmonitor"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         o|O)
-            deploy_resource "avi-l7rule" "gatewayapi/l7rule.yaml" "l7rule"
+            deploy_resource "avi-l7rule" "gatewayapi/l7rule-gw-sec.yaml" "l7rule"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         p|P)
-            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension.yaml" "routebackendextension"
+            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension-my-route-backend-extension.yaml" "routebackendextension"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
         q|Q)
-            deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting.yaml" "aviinfrasetting"
+            deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting-toDmz.yaml" "aviinfrasetting"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
