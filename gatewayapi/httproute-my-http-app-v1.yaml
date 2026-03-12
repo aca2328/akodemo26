@@ -1,4 +1,4 @@
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: my-http-app-v1
@@ -6,10 +6,11 @@ spec:
   parentRefs:
     - name: gw-multiple-listeners
   rules:
-    - matches:
+    - name: app-v1
+      matches:
         - path:
             type: PathPrefix
-            value: /
+            value: "/"
       backendRefs:
         - name: svc-v1
           port: 80
