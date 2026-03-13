@@ -4,7 +4,7 @@ metadata:
   name: avi-hello-world-test
   namespace: default
   labels:
-    app: avi-hello
+    app: avi-hello-test
     version: v1
 spec:
   replicas: 3
