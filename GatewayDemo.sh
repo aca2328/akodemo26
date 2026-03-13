@@ -7,21 +7,21 @@ deploy_resource() {
     local resource_name=$1
     local resource_file=$2
     local resource_type=$3
-    
+
     echo "Deploying $resource_name..."
     kubectl apply -f $resource_file
     if [ $? -ne 0 ]; then
         echo "Error: Failed to deploy $resource_name"
         return 1
     fi
-    
+
     # Show the applied resource
     echo ""
     echo "Successfully deployed $resource_name. Resource details:"
     echo "=========================================="
     cat $resource_file
     echo "=========================================="
-    
+
     sleep 2
     return 0
 }
@@ -48,10 +48,10 @@ while true; do
     echo "x. Delete ALL Resources"
     echo "z. Exit"
     echo "=========================================="
-    echo -n "Press key (a-z, n, x): "
+    echo -n "Press key (a-z, m, n, x, z): "
     read -n 1 choice
     echo
-    
+
     case $choice in
         a|A)
             # Deploy Gateway
@@ -63,7 +63,7 @@ while true; do
             # Deploy complete stack: deployment, service, and HTTPRoute
             echo "Starting Complete Stack Deployment (v1)..."
             echo "=========================================="
-            
+
             # Deploy Deployment v1
             echo "Step 1/3: Deploying Deployment v1..."
             deploy_resource "avi-hello-world-v1" "gatewayapi/deployment-avi-hello-world-v1.yaml" "deployment"
@@ -74,7 +74,7 @@ while true; do
             echo -n "Press any key to continue to Service deployment..."
             read -n 1 -s
             echo
-            
+
             # Deploy Service v1
             echo "Step 2/3: Deploying Service v1..."
             deploy_resource "svc-v1" "gatewayapi/service-svc-v1.yaml" "service"
@@ -85,7 +85,7 @@ while true; do
             echo -n "Press any key to continue to HTTPRoute deployment..."
             read -n 1 -s
             echo
-            
+
             # Deploy HTTPRoute v1
             echo "Step 3/3: Deploying HTTPRoute v1..."
             deploy_resource "my-http-app-v1" "gatewayapi/httproute-my-http-app-v1.yaml" "httproute"
@@ -122,7 +122,7 @@ while true; do
             # Deploy complete stack v2: deployment, service (no HTTPRoute as v2-v3 covers both)
             echo "Starting Complete Stack Deployment (v2)..."
             echo "=========================================="
-            
+
             # Deploy Deployment v2
             echo "Step 1/2: Deploying Deployment v2..."
             deploy_resource "avi-hello-world-v2" "gatewayapi/deployment-avi-hello-world-v2.yaml" "deployment"
@@ -133,7 +133,7 @@ while true; do
             echo -n "Press any key to continue to Service deployment..."
             read -n 1 -s
             echo
-            
+
             # Deploy Service v2
             echo "Step 2/2: Deploying Service v2..."
             deploy_resource "svc-v2" "gatewayapi/service-svc-v2.yaml" "service"
@@ -150,7 +150,7 @@ while true; do
             # Deploy complete stack v3: deployment, service (no HTTPRoute as v2-v3 covers both)
             echo "Starting Complete Stack Deployment (v3)..."
             echo "=========================================="
-            
+
             # Deploy Deployment v3
             echo "Step 1/2: Deploying Deployment v3..."
             deploy_resource "avi-hello-world-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
@@ -161,7 +161,7 @@ while true; do
             echo -n "Press any key to continue to Service deployment..."
             read -n 1 -s
             echo
-            
+
             # Deploy Service v3
             echo "Step 2/2: Deploying Service v3..."
             deploy_resource "svc-v3" "gatewayapi/service-svc-v3.yaml" "service"
@@ -195,10 +195,10 @@ while true; do
             echo "Verifying all deployed resources..."
             echo "=========================================="
             echo "Deployments:"
-            kubectl get deployments -n default -o wide | grep avi-hello-world || echo "No deployments found"
+            kubectl get deployments -n default -o wide || echo "No deployments found"
             echo ""
             echo "Services:"
-            kubectl get services -n default -o wide | grep -E "avi-service|svc-v" || echo "No services found"
+            kubectl get services -n default -o wide || echo "No services found"
             echo ""
             echo "Gateways:"
             kubectl get gateways -n default -o wide || echo "No gateways found"
@@ -235,37 +235,35 @@ while true; do
             read -p "Are you sure you want to delete ALL resources (y/n)? " choice
             if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
                 echo "Deleting deployments..."
-                kubectl delete deployment avi-hello-world -n default 2>/dev/null || true
                 kubectl delete deployment avi-hello-world-v1 -n default 2>/dev/null || true
                 kubectl delete deployment avi-hello-world-v2 -n default 2>/dev/null || true
                 kubectl delete deployment avi-hello-world-v3 -n default 2>/dev/null || true
-                
+
                 echo "Deleting services..."
-                kubectl delete service avi-hello-svc -n default 2>/dev/null || true
                 kubectl delete service svc-v1 -n default 2>/dev/null || true
                 kubectl delete service svc-v2 -n default 2>/dev/null || true
                 kubectl delete service svc-v3 -n default 2>/dev/null || true
-                
+
                 echo "Deleting gateways..."
                 kubectl delete gateway gw-sec -n default 2>/dev/null || true
                 kubectl delete gateway gw-multiple-listeners -n default 2>/dev/null || true
                 kubectl delete gateway gw-multiple-listeners-static-ip -n default 2>/dev/null || true
-                
+
                 echo "Deleting httproutes..."
                 kubectl delete httproute my-http-app-v1 -n default 2>/dev/null || true
                 kubectl delete httproute my-http-app-v2 -n default 2>/dev/null || true
                 kubectl delete httproute my-http-app-v2-v3 -n default 2>/dev/null || true
-                
+
                 echo "Deleting healthmonitors..."
                 kubectl delete healthmonitor my-health-monitor -n default 2>/dev/null || true
-                
+
                 echo "Deleting routebackendextensions..."
                 kubectl delete routebackendextension my-route-backend-extension -n default 2>/dev/null || true
-                
+
                 echo "Deleting aviinfrasettings..."
                 kubectl delete aviinfrasetting toDmz -n default 2>/dev/null || true
-                
-                echo "All gateway resources deleted successfully!"
+
+                echo "All resources deleted successfully!"
             else
                 echo "Delete operation cancelled."
             fi
