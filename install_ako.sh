@@ -170,12 +170,9 @@ prepare_configuration() {
         echo -e "${GREEN}Configuration file '$VALUES_FILE' detected.${NC}"
     fi
 
-    # Propose editing
-    read -n 1 -p "Do you want to edit $VALUES_FILE now using vi? (y/n): " edit_choice
-    echo "" # Newline
-    if [[ "$edit_choice" =~ ^[Yy]$ ]]; then
-        vi "$VALUES_FILE"
-    fi
+    # Note: values-secret.yaml will be edited separately, ako-values.yaml contains default settings
+    echo -e "${YELLOW}Note: $VALUES_FILE contains default configuration settings.${NC}"
+    echo -e "${YELLOW}You will be prompted to edit values-secret.yaml for sensitive configuration.${NC}"
 }
 
 # ==========================================
