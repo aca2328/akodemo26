@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: avi-hello-world-test
+  namespace: default
   labels:
     app: avi-hello
     version: v1
-  name: avi-hello-world-test
-  namespace: default
 spec:
   replicas: 3
   selector:
@@ -19,20 +19,26 @@ spec:
         version: v1
     spec:
       containers:
-        - image: nginxdemos/hello:plain-text
-          initialDelaySeconds: 3
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8080
-          name: hello
-          periodSeconds: 5
+        - name: hello
+          image: nginxdemos/hello:plain-text
           ports:
             - containerPort: 80
+          # Fix: Create the /live file so Nginx can serve it
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  ["/bin/sh", "-c", "echo 'OK' > /usr/share/nginx/html/live"]
+          livenessProbe:
+            httpGet:
+              path: / # The root path exists by default
+              port: 80 # Changed from 8080 to 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /live
-              port: 8080
+              path: /live # This now works because of the lifecycle hook above
+              port: 80 # Changed from 8080 to 80
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
