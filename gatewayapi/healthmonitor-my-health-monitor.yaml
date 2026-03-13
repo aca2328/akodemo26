@@ -15,7 +15,7 @@ spec:
     http_request: "GET /health HTTP/1.1"
     http_response_code:
       - HTTP_2XX
-    http_response: "OK"
+    #    http_response: "OK"
     exact_http_request: false
     maintenance_code:
       - 503
