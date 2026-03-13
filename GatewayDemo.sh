@@ -77,12 +77,13 @@ while true; do
     echo "j. Deploy L7Rule"
     echo "k. Deploy RouteBackendExtension"
     echo "l. Deploy AVIInfrasetting"
-    echo "m. Verify All Deployments"
-    echo "n. View AKO Logs"
+    echo "m. Scale v1 Deployment to 6 Pods"
+    echo "n. Verify All Deployments"
+    echo "o. View AKO Logs"
     echo "x. Delete ALL Resources"
     echo "z. Exit"
     echo "=========================================="
-    echo -n "Press key (a-z, n, x): "
+    echo -n "Press key (a-z, o, x): "
     read -n 1 choice
     echo
     
@@ -384,7 +385,28 @@ while true; do
             read -n 1 -s
             ;;
         m|M)
-            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
+            # Scale v1 deployment to 6 pods
+            echo "Scaling v1 Deployment to 6 Pods..."
+            echo "=========================================="
+            
+            # Check if deployment exists
+            if resource_exists "deployment" "avi-hello-world-v1"; then
+                echo "Scaling deployment avi-hello-world-v1 to 6 replicas..."
+                kubectl scale deployment avi-hello-world-v1 --replicas=6
+                
+                # Verify scaling
+                sleep 3
+                echo "Scaling complete. Current status:"
+                echo "=========================================="
+                kubectl get deployments -n default -o wide | grep avi-hello-world-v1
+                echo "Pod status:"
+                kubectl get pods -n default -o wide | grep avi-hello-world-v1
+                echo "=========================================="
+                echo "Deployment scaled to 6 pods successfully!"
+            else
+                echo "Error: Deployment avi-hello-world-v1 not found."
+                echo "Please deploy the v1 stack first using option 'a'."
+            fi
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
@@ -518,7 +540,28 @@ while true; do
             read -n 1 -s
             ;;
         m|M)
-            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
+            # Scale v1 deployment to 6 pods
+            echo "Scaling v1 Deployment to 6 Pods..."
+            echo "=========================================="
+            
+            # Check if deployment exists
+            if resource_exists "deployment" "avi-hello-world-v1"; then
+                echo "Scaling deployment avi-hello-world-v1 to 6 replicas..."
+                kubectl scale deployment avi-hello-world-v1 --replicas=6
+                
+                # Verify scaling
+                sleep 3
+                echo "Scaling complete. Current status:"
+                echo "=========================================="
+                kubectl get deployments -n default -o wide | grep avi-hello-world-v1
+                echo "Pod status:"
+                kubectl get pods -n default -o wide | grep avi-hello-world-v1
+                echo "=========================================="
+                echo "Deployment scaled to 6 pods successfully!"
+            else
+                echo "Error: Deployment avi-hello-world-v1 not found."
+                echo "Please deploy the v1 stack first using option 'a'."
+            fi
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
@@ -647,7 +690,28 @@ while true; do
             read -n 1 -s
             ;;
         m|M)
-            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-v3.yaml" "deployment"
+            # Scale v1 deployment to 6 pods
+            echo "Scaling v1 Deployment to 6 Pods..."
+            echo "=========================================="
+            
+            # Check if deployment exists
+            if resource_exists "deployment" "avi-hello-world-v1"; then
+                echo "Scaling deployment avi-hello-world-v1 to 6 replicas..."
+                kubectl scale deployment avi-hello-world-v1 --replicas=6
+                
+                # Verify scaling
+                sleep 3
+                echo "Scaling complete. Current status:"
+                echo "=========================================="
+                kubectl get deployments -n default -o wide | grep avi-hello-world-v1
+                echo "Pod status:"
+                kubectl get pods -n default -o wide | grep avi-hello-world-v1
+                echo "=========================================="
+                echo "Deployment scaled to 6 pods successfully!"
+            else
+                echo "Error: Deployment avi-hello-world-v1 not found."
+                echo "Please deploy the v1 stack first using option 'a'."
+            fi
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
