@@ -32,18 +32,17 @@ while true; do
     echo "=========================================="
     echo "  Gateway API Resources Deployment Menu"
     echo "=========================================="
-    echo "a. Deploy Complete Stack (v1)"
-    echo "b. Deploy Complete Stack (v2)"
-    echo "c. Deploy Complete Stack (v3)"
-    echo "d. Deploy Demo Application"
-    echo "e. Deploy Gateway"
-    echo "f. Deploy Gateway with Static IP"
-    echo "g. Deploy HTTPRoute v1 Extended"
-    echo "h. Deploy HTTPRoute v2 and v3"
-    echo "i. Deploy HealthMonitor"
-    echo "j. Deploy L7Rule"
-    echo "k. Deploy RouteBackendExtension"
-    echo "l. Deploy AVIInfrasetting"
+    echo "a. Deploy Gateway"
+    echo "b. Deploy Complete Stack (v1)"
+    echo "c. Deploy HTTPRoute v1 Extended"
+    echo "d. Deploy HealthMonitor"
+    echo "e. Deploy RouteBackendExtension"
+    echo "f. Deploy L7Rule"
+    echo "g. Deploy Complete Stack (v2)"
+    echo "h. Deploy Complete Stack (v3)"
+    echo "i. Deploy Gateway with Static IP"
+    echo "j. Deploy HTTPRoute v2 and v3"
+    echo "k. Deploy AVIInfrasetting"
     echo "m. Verify All Deployments"
     echo "n. View AKO Logs"
     echo "x. Delete ALL Resources"
@@ -55,6 +54,12 @@ while true; do
     
     case $choice in
         a|A)
+            # Deploy Gateway
+            deploy_resource "avi-gateway" "gatewayapi/gateway-gw-multiple-listeners.yaml" "gateway"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        b|B)
             # Deploy complete stack: deployment, service, and HTTPRoute
             echo "Starting Complete Stack Deployment (v1)..."
             echo "=========================================="
@@ -92,7 +97,28 @@ while true; do
             echo -n "Press any key to return to main menu..."
             read -n 1 -s
             ;;
-        b|B)
+        c|C)
+            # Deploy HTTPRoute v1 Extended
+            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-my-http-app-v1-extended.yaml" "httproute"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        d|D)
+            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor-my-health-monitor.yaml" "healthmonitor"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        e|E)
+            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension-my-route-backend-extension.yaml" "routebackendextension"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        f|F)
+            deploy_resource "avi-l7rule" "gatewayapi/l7rule-gw-sec.yaml" "l7rule"
+            echo -n "Press any key to continue..."
+            read -n 1 -s
+            ;;
+        g|G)
             # Deploy complete stack v2: deployment, service (no HTTPRoute as v2-v3 covers both)
             echo "Starting Complete Stack Deployment (v2)..."
             echo "=========================================="
@@ -120,7 +146,7 @@ while true; do
             echo -n "Press any key to return to main menu..."
             read -n 1 -s
             ;;
-        c|C)
+        h|H)
             # Deploy complete stack v3: deployment, service (no HTTPRoute as v2-v3 covers both)
             echo "Starting Complete Stack Deployment (v3)..."
             echo "=========================================="
@@ -148,87 +174,19 @@ while true; do
             echo -n "Press any key to return to main menu..."
             read -n 1 -s
             ;;
-        d|D)
-            # Deploy Demo Application
-            deploy_resource "avi-demo-app" "gatewayapi/deployment-avi-hello-world.yaml" "deployment"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        e|E)
-            # Deploy Gateway
-            deploy_resource "avi-gateway" "gatewayapi/gateway-gw-multiple-listeners.yaml" "gateway"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        f|F)
+        i|I)
             # Deploy Gateway with Static IP
             deploy_resource "avi-gateway-static" "gatewayapi/gateway-gw-multiple-listeners-static-ip.yaml" "gateway"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
-        g|G)
-            # Deploy HTTPRoute v1 Extended
-            deploy_resource "avi-httproute-v1-extended" "gatewayapi/httproute-my-http-app-v1-extended.yaml" "httproute"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        h|H)
+        j|J)
             # Deploy HTTPRoute v2 and v3
             deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-my-http-app-v2-v3.yaml" "httproute"
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
-        g|G)
-            deploy_resource "avi-httproute-v2-v3" "gatewayapi/httproute-my-http-app-v2-v3.yaml" "httproute"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        h|H)
-            deploy_resource "avi-service-v1" "gatewayapi/service-svc-v1.yaml" "service"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        i|I)
-            deploy_resource "avi-service-v2" "gatewayapi/service-svc-v2.yaml" "service"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        j|J)
-            deploy_resource "avi-service-v3" "gatewayapi/service-svc-v3.yaml" "service"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
         k|K)
-            deploy_resource "avi-deployment-v1" "gatewayapi/deployment-avi-hello-world-v1.yaml" "deployment"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        l|L)
-            deploy_resource "avi-deployment-v2" "gatewayapi/deployment-avi-hello-world-v2.yaml" "deployment"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        m|M)
-            deploy_resource "avi-deployment-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        n|N)
-            deploy_resource "avi-healthmonitor" "gatewayapi/healthmonitor-my-health-monitor.yaml" "healthmonitor"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        o|O)
-            deploy_resource "avi-l7rule" "gatewayapi/l7rule-gw-sec.yaml" "l7rule"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        p|P)
-            deploy_resource "avi-routebackendextension" "gatewayapi/routebackendextension-my-route-backend-extension.yaml" "routebackendextension"
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            ;;
-        q|Q)
             deploy_resource "avi-aviinfrasetting" "gatewayapi/aviinfrasetting-toDmz.yaml" "aviinfrasetting"
             echo -n "Press any key to continue..."
             read -n 1 -s
