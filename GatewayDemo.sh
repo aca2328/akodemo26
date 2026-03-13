@@ -2,59 +2,26 @@
 
 # Interactive menu for deploying Kubernetes resources in the gatewayapi directory
 
-# Function to check if a resource exists
-resource_exists() {
-    local resource_type=$1
-    local resource_name=$2
-    kubectl get $resource_type $resource_name -n default &> /dev/null
-    return $?
-}
-
 # Function to deploy a resource
 deploy_resource() {
     local resource_name=$1
     local resource_file=$2
     local resource_type=$3
     
-    echo "Checking if $resource_name exists..."
-    if resource_exists $resource_type $resource_name; then
-        echo "$resource_name already exists."
-        echo -n "Do you want to delete it (y/n)? "
-        read -n 1 choice
-        echo
-        if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-            echo "Deleting $resource_name..."
-            kubectl delete $resource_type $resource_name -n default
-            if [ $? -ne 0 ]; then
-                echo "Error: Failed to delete $resource_name"
-                return 1
-            fi
-            sleep 2
-            echo "Resource deleted. Current status:"
-            echo "=========================================="
-            kubectl get $resource_type -n default -o wide | grep $resource_name || echo "Resource successfully deleted"
-            echo "=========================================="
-            echo -n "Press any key to continue..."
-            read -n 1 -s
-            return 0
-        else
-            echo "Skipping $resource_name."
-        fi
-    else
-        echo "$resource_name does not exist. Deploying..."
-        kubectl apply -f $resource_file
-        if [ $? -ne 0 ]; then
-            echo "Error: Failed to deploy $resource_name"
-            return 1
-        fi
-        
-        # Show the applied resource
-        echo ""
-        echo "Successfully deployed $resource_name. Resource details:"
-        echo "=========================================="
-        cat $resource_file
-        echo "=========================================="
+    echo "Deploying $resource_name..."
+    kubectl apply -f $resource_file
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to deploy $resource_name"
+        return 1
     fi
+    
+    # Show the applied resource
+    echo ""
+    echo "Successfully deployed $resource_name. Resource details:"
+    echo "=========================================="
+    cat $resource_file
+    echo "=========================================="
+    
     sleep 2
     return 0
 }
@@ -94,28 +61,7 @@ while true; do
             
             # Deploy Deployment v1
             echo "Step 1/3: Deploying Deployment v1..."
-            if resource_exists "deployment" "avi-hello-world-v1"; then
-                echo "Deployment avi-hello-world-v1 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting avi-hello-world-v1..."
-                    kubectl delete deployment avi-hello-world-v1 -n default
-                    sleep 3
-                    echo "Deployment deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get deployments -n default -o wide | grep avi-hello-world-v1 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping deployment."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying avi-hello-world-v1..."
-            kubectl apply -f "gatewayapi/deployment-avi-hello-world-v1.yaml"
+            deploy_resource "avi-hello-world-v1" "gatewayapi/deployment-avi-hello-world-v1.yaml" "deployment"
             echo "Deployment deployed successfully!"
             echo "=========================================="
             kubectl get deployments -n default -o wide | grep avi-hello-world-v1
@@ -126,28 +72,7 @@ while true; do
             
             # Deploy Service v1
             echo "Step 2/3: Deploying Service v1..."
-            if resource_exists "service" "svc-v1"; then
-                echo "Service svc-v1 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting svc-v1..."
-                    kubectl delete service svc-v1 -n default
-                    sleep 3
-                    echo "Service deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get services -n default -o wide | grep svc-v1 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping service."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying svc-v1..."
-            kubectl apply -f "gatewayapi/service-svc-v1.yaml"
+            deploy_resource "svc-v1" "gatewayapi/service-svc-v1.yaml" "service"
             echo "Service deployed successfully!"
             echo "=========================================="
             kubectl get services -n default -o wide | grep svc-v1
@@ -158,28 +83,7 @@ while true; do
             
             # Deploy HTTPRoute v1
             echo "Step 3/3: Deploying HTTPRoute v1..."
-            if resource_exists "httproute" "my-http-app-v1"; then
-                echo "HTTPRoute my-http-app-v1 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting my-http-app-v1..."
-                    kubectl delete httproute my-http-app-v1 -n default
-                    sleep 3
-                    echo "HTTPRoute deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get httproutes -n default -o wide | grep my-http-app-v1 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping HTTPRoute."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying my-http-app-v1..."
-            kubectl apply -f "gatewayapi/httproute-my-http-app-v1.yaml"
+            deploy_resource "my-http-app-v1" "gatewayapi/httproute-my-http-app-v1.yaml" "httproute"
             echo "HTTPRoute deployed successfully!"
             echo "=========================================="
             kubectl get httproutes -n default -o wide | grep my-http-app-v1
@@ -195,28 +99,7 @@ while true; do
             
             # Deploy Deployment v2
             echo "Step 1/2: Deploying Deployment v2..."
-            if resource_exists "deployment" "avi-hello-world-v2"; then
-                echo "Deployment avi-hello-world-v2 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting avi-hello-world-v2..."
-                    kubectl delete deployment avi-hello-world-v2 -n default
-                    sleep 3
-                    echo "Deployment deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get deployments -n default -o wide | grep avi-hello-world-v2 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping deployment."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying avi-hello-world-v2..."
-            kubectl apply -f "gatewayapi/deployment-avi-hello-world-v2.yaml"
+            deploy_resource "avi-hello-world-v2" "gatewayapi/deployment-avi-hello-world-v2.yaml" "deployment"
             echo "Deployment deployed successfully!"
             echo "=========================================="
             kubectl get deployments -n default -o wide | grep avi-hello-world-v2
@@ -227,28 +110,7 @@ while true; do
             
             # Deploy Service v2
             echo "Step 2/2: Deploying Service v2..."
-            if resource_exists "service" "svc-v2"; then
-                echo "Service svc-v2 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting svc-v2..."
-                    kubectl delete service svc-v2 -n default
-                    sleep 3
-                    echo "Service deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get services -n default -o wide | grep svc-v2 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping service."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying svc-v2..."
-            kubectl apply -f "gatewayapi/service-svc-v2.yaml"
+            deploy_resource "svc-v2" "gatewayapi/service-svc-v2.yaml" "service"
             echo "Service deployed successfully!"
             echo "=========================================="
             kubectl get services -n default -o wide | grep svc-v2
@@ -265,28 +127,7 @@ while true; do
             
             # Deploy Deployment v3
             echo "Step 1/2: Deploying Deployment v3..."
-            if resource_exists "deployment" "avi-hello-world-v3"; then
-                echo "Deployment avi-hello-world-v3 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting avi-hello-world-v3..."
-                    kubectl delete deployment avi-hello-world-v3 -n default
-                    sleep 3
-                    echo "Deployment deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get deployments -n default -o wide | grep avi-hello-world-v3 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping deployment."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying avi-hello-world-v3..."
-            kubectl apply -f "gatewayapi/deployment-avi-hello-world-v3.yaml"
+            deploy_resource "avi-hello-world-v3" "gatewayapi/deployment-avi-hello-world-v3.yaml" "deployment"
             echo "Deployment deployed successfully!"
             echo "=========================================="
             kubectl get deployments -n default -o wide | grep avi-hello-world-v3
@@ -297,28 +138,7 @@ while true; do
             
             # Deploy Service v3
             echo "Step 2/2: Deploying Service v3..."
-            if resource_exists "service" "svc-v3"; then
-                echo "Service svc-v3 already exists."
-                echo -n "Do you want to delete it (y/n)? "
-                read -n 1 choice
-                echo
-                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
-                    echo "Deleting svc-v3..."
-                    kubectl delete service svc-v3 -n default
-                    sleep 3
-                    echo "Service deleted. Current status:"
-                    echo "=========================================="
-                    kubectl get services -n default -o wide | grep svc-v3 || echo "Resource successfully deleted"
-                    echo "=========================================="
-                else
-                    echo "Skipping service."
-                    echo -n "Press any key to continue..."
-                    read -n 1 -s
-                    continue
-                fi
-            fi
-            echo "Deploying svc-v3..."
-            kubectl apply -f "gatewayapi/service-svc-v3.yaml"
+            deploy_resource "svc-v3" "gatewayapi/service-svc-v3.yaml" "service"
             echo "Service deployed successfully!"
             echo "=========================================="
             kubectl get services -n default -o wide | grep svc-v3
