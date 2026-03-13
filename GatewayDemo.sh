@@ -191,7 +191,7 @@ while true; do
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
-        r|R)
+        m|M)
             echo "Verifying deployments..."
             echo "Deployments:"
             kubectl get deployments -n default | grep avi-hello-world || echo "Not found"
@@ -204,7 +204,7 @@ while true; do
             echo -n "Press any key to continue..."
             read -n 1 -s
             ;;
-        s|S)
+        n|N)
             echo "Viewing AKO logs..."
             echo "=========================================="
             kubectl logs ako-0 -n avi-system --tail=50
