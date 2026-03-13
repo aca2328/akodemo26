@@ -66,29 +66,23 @@ while true; do
     echo "  Gateway API Resources Deployment Menu"
     echo "=========================================="
     echo "a. Deploy Complete Stack (v1)"
-    echo "b. Deploy Demo Application"
-    echo "c. Deploy Gateway"
-    echo "d. Deploy Gateway with Static IP"
-    echo "e. Deploy HTTPRoute v1"
-    echo "f. Deploy HTTPRoute v1 Extended"
-    echo "g. Deploy HTTPRoute v2"
+    echo "b. Deploy Complete Stack (v2)"
+    echo "c. Deploy Complete Stack (v3)"
+    echo "d. Deploy Demo Application"
+    echo "e. Deploy Gateway"
+    echo "f. Deploy Gateway with Static IP"
+    echo "g. Deploy HTTPRoute v1 Extended"
     echo "h. Deploy HTTPRoute v2 and v3"
-    echo "i. Deploy Service v1"
-    echo "j. Deploy Service v2"
-    echo "k. Deploy Service v3"
-    echo "l. Deploy Deployment v1"
-    echo "m. Deploy Deployment v2"
-    echo "n. Deploy Deployment v3"
-    echo "o. Deploy HealthMonitor"
-    echo "p. Deploy L7Rule"
-    echo "q. Deploy RouteBackendExtension"
-    echo "r. Deploy AVIInfrasetting"
-    echo "s. Verify All Deployments"
-    echo "t. View AKO Logs"
+    echo "i. Deploy HealthMonitor"
+    echo "j. Deploy L7Rule"
+    echo "k. Deploy RouteBackendExtension"
+    echo "l. Deploy AVIInfrasetting"
+    echo "m. Verify All Deployments"
+    echo "n. View AKO Logs"
     echo "x. Delete ALL Resources"
     echo "z. Exit"
     echo "=========================================="
-    echo -n "Press key (a-z, t, x): "
+    echo -n "Press key (a-z, n, x): "
     read -n 1 choice
     echo
     
@@ -195,6 +189,146 @@ while true; do
             read -n 1 -s
             ;;
         b|B)
+            # Deploy complete stack v2: deployment, service (no HTTPRoute as v2-v3 covers both)
+            echo "Starting Complete Stack Deployment (v2)..."
+            echo "=========================================="
+            
+            # Deploy Deployment v2
+            echo "Step 1/2: Deploying Deployment v2..."
+            if resource_exists "deployment" "avi-hello-world-v2"; then
+                echo "Deployment avi-hello-world-v2 already exists."
+                echo -n "Do you want to delete it (y/n)? "
+                read -n 1 choice
+                echo
+                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                    echo "Deleting avi-hello-world-v2..."
+                    kubectl delete deployment avi-hello-world-v2 -n default
+                    sleep 3
+                    echo "Deployment deleted. Current status:"
+                    echo "=========================================="
+                    kubectl get deployments -n default -o wide | grep avi-hello-world-v2 || echo "Resource successfully deleted"
+                    echo "=========================================="
+                else
+                    echo "Skipping deployment."
+                    echo -n "Press any key to continue..."
+                    read -n 1 -s
+                    continue
+                fi
+            fi
+            echo "Deploying avi-hello-world-v2..."
+            kubectl apply -f "gatewayapi/deployment-avi-hello-world-v2.yaml"
+            echo "Deployment deployed successfully!"
+            echo "=========================================="
+            kubectl get deployments -n default -o wide | grep avi-hello-world-v2
+            echo "=========================================="
+            echo -n "Press any key to continue to Service deployment..."
+            read -n 1 -s
+            echo
+            
+            # Deploy Service v2
+            echo "Step 2/2: Deploying Service v2..."
+            if resource_exists "service" "svc-v2"; then
+                echo "Service svc-v2 already exists."
+                echo -n "Do you want to delete it (y/n)? "
+                read -n 1 choice
+                echo
+                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                    echo "Deleting svc-v2..."
+                    kubectl delete service svc-v2 -n default
+                    sleep 3
+                    echo "Service deleted. Current status:"
+                    echo "=========================================="
+                    kubectl get services -n default -o wide | grep svc-v2 || echo "Resource successfully deleted"
+                    echo "=========================================="
+                else
+                    echo "Skipping service."
+                    echo -n "Press any key to continue..."
+                    read -n 1 -s
+                    continue
+                fi
+            fi
+            echo "Deploying svc-v2..."
+            kubectl apply -f "gatewayapi/service-svc-v2.yaml"
+            echo "Service deployed successfully!"
+            echo "=========================================="
+            kubectl get services -n default -o wide | grep svc-v2
+            echo "=========================================="
+            echo "Note: HTTPRoute my-http-app-v2-v3 will handle routing for both v2 and v3"
+            echo "Complete stack v2 deployed successfully!"
+            echo -n "Press any key to return to main menu..."
+            read -n 1 -s
+            ;;
+        c|C)
+            # Deploy complete stack v3: deployment, service (no HTTPRoute as v2-v3 covers both)
+            echo "Starting Complete Stack Deployment (v3)..."
+            echo "=========================================="
+            
+            # Deploy Deployment v3
+            echo "Step 1/2: Deploying Deployment v3..."
+            if resource_exists "deployment" "avi-hello-world-v3"; then
+                echo "Deployment avi-hello-world-v3 already exists."
+                echo -n "Do you want to delete it (y/n)? "
+                read -n 1 choice
+                echo
+                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                    echo "Deleting avi-hello-world-v3..."
+                    kubectl delete deployment avi-hello-world-v3 -n default
+                    sleep 3
+                    echo "Deployment deleted. Current status:"
+                    echo "=========================================="
+                    kubectl get deployments -n default -o wide | grep avi-hello-world-v3 || echo "Resource successfully deleted"
+                    echo "=========================================="
+                else
+                    echo "Skipping deployment."
+                    echo -n "Press any key to continue..."
+                    read -n 1 -s
+                    continue
+                fi
+            fi
+            echo "Deploying avi-hello-world-v3..."
+            kubectl apply -f "gatewayapi/deployment-avi-hello-world-v3.yaml"
+            echo "Deployment deployed successfully!"
+            echo "=========================================="
+            kubectl get deployments -n default -o wide | grep avi-hello-world-v3
+            echo "=========================================="
+            echo -n "Press any key to continue to Service deployment..."
+            read -n 1 -s
+            echo
+            
+            # Deploy Service v3
+            echo "Step 2/2: Deploying Service v3..."
+            if resource_exists "service" "svc-v3"; then
+                echo "Service svc-v3 already exists."
+                echo -n "Do you want to delete it (y/n)? "
+                read -n 1 choice
+                echo
+                if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
+                    echo "Deleting svc-v3..."
+                    kubectl delete service svc-v3 -n default
+                    sleep 3
+                    echo "Service deleted. Current status:"
+                    echo "=========================================="
+                    kubectl get services -n default -o wide | grep svc-v3 || echo "Resource successfully deleted"
+                    echo "=========================================="
+                else
+                    echo "Skipping service."
+                    echo -n "Press any key to continue..."
+                    read -n 1 -s
+                    continue
+                fi
+            fi
+            echo "Deploying svc-v3..."
+            kubectl apply -f "gatewayapi/service-svc-v3.yaml"
+            echo "Service deployed successfully!"
+            echo "=========================================="
+            kubectl get services -n default -o wide | grep svc-v3
+            echo "=========================================="
+            echo "Note: HTTPRoute my-http-app-v2-v3 will handle routing for both v2 and v3"
+            echo "Complete stack v3 deployed successfully!"
+            echo -n "Press any key to return to main menu..."
+            read -n 1 -s
+            ;;
+        d|D)
             deploy_resource "avi-gateway" "gatewayapi/gateway-gw-multiple-listeners.yaml" "gateway"
             echo -n "Press any key to continue..."
             read -n 1 -s
