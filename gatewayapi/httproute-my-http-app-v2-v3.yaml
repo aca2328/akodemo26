@@ -18,3 +18,4 @@ spec:
           weight: 90
         - name: svc-v3
           port: 80
+          weight: 10
