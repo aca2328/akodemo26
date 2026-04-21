@@ -14,5 +14,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: avi-hello-test
+    app: avi-hello
     version: v1
