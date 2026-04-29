@@ -187,8 +187,8 @@ while true; do
         echo "4. Deploy HostRule for hello.110.ams.avilab.eu"
         echo "5. Deploy HostRule for hello2.110.ams.avilab.eu"
         echo "6. Deploy TLS Ingress (Optional)"
-        echo "7. Manage TLS Secret for hello.110.ams.avilab.eu"
-        echo "8. Manage TLS Secret for hello2.110.ams.avilab.eu"
+        echo "7. Manage TLS Secret for hello-tls.110.ams.avilab.eu"
+        echo "8. Manage TLS Secret for hello2-tls.110.ams.avilab.eu"
         echo "9. View AKO Logs"
         echo "c. Toggle deleteConfig in avi-k8s-config"
         echo "v. Verify All Deployments"
@@ -231,10 +231,10 @@ while true; do
                 read -n 1 -s
                 ;;
             7)
-                manage_tls_secret "hello.110.ams.avilab.eu" "hello.110.ams.avilab.eu"
+                manage_tls_secret "hello-tls.110.ams.avilab.eu" "hello-tls.110.ams.avilab.eu"
                 ;;
             8)
-                manage_tls_secret "hello2.110.ams.avilab.eu" "hello2.110.ams.avilab.eu"
+                manage_tls_secret "hello2-tls.110.ams.avilab.eu" "hello2-tls.110.ams.avilab.eu"
                 ;;
             9)
                 echo "Viewing AKO logs..."
@@ -258,8 +258,8 @@ while true; do
                     kubectl delete ingress tls-avi-hello-ingress -n default 2>/dev/null || true
                     kubectl delete hostrule hello-hr -n default 2>/dev/null || true
                     kubectl delete hostrule hello2-hr -n default 2>/dev/null || true
-                    kubectl delete secret hello.110.ams.avilab.eu -n default 2>/dev/null || true
-                    kubectl delete secret hello2.110.ams.avilab.eu -n default 2>/dev/null || true
+                    kubectl delete secret hello-tls.110.ams.avilab.eu -n default 2>/dev/null || true
+                    kubectl delete secret hello2-tls.110.ams.avilab.eu -n default 2>/dev/null || true
                     echo -e "${GREEN}All ClusterIP demo resources deleted.${NC}"
                 else
                     echo "Delete operation cancelled."
@@ -277,7 +277,7 @@ while true; do
                 echo "HostRules:"
                 kubectl get hostrules -n default | grep hello || echo "Not found"
                 echo "TLS Secrets:"
-                kubectl get secrets -n default | grep -E "(hello\.110\.ams\.avilab\.eu|hello2\.110\.ams\.avilab\.eu)" || echo "No TLS secrets found"
+                kubectl get secrets -n default | grep -E "(hello-tls\.110\.ams\.avilab\.eu|hello2-tls\.110\.ams\.avilab\.eu)" || echo "No TLS secrets found"
                 echo -n "Press any key to continue..."
                 read -n 1 -s
                 ;;
@@ -303,8 +303,8 @@ while true; do
         echo "4. Deploy HostRule for hello-np.110.ams.avilab.eu"
         echo "5. Deploy HostRule for hello2-np.110.ams.avilab.eu"
         echo "6. Deploy TLS Ingress (Optional)"
-        echo "7. Manage TLS Secret for hello-np.110.ams.avilab.eu"
-        echo "8. Manage TLS Secret for hello2-np.110.ams.avilab.eu"
+        echo "7. Manage TLS Secret for hello-np-tls.110.ams.avilab.eu"
+        echo "8. Manage TLS Secret for hello2-np-tls.110.ams.avilab.eu"
         echo "9. View AKO Logs"
         echo "c. Toggle deleteConfig in avi-k8s-config"
         echo "v. Verify All Deployments"
@@ -348,10 +348,10 @@ while true; do
                 read -n 1 -s
                 ;;
             7)
-                manage_tls_secret "hello-np.110.ams.avilab.eu" "hello-np.110.ams.avilab.eu"
+                manage_tls_secret "hello-np-tls.110.ams.avilab.eu" "hello-np-tls.110.ams.avilab.eu"
                 ;;
             8)
-                manage_tls_secret "hello2-np.110.ams.avilab.eu" "hello2-np.110.ams.avilab.eu"
+                manage_tls_secret "hello2-np-tls.110.ams.avilab.eu" "hello2-np-tls.110.ams.avilab.eu"
                 ;;
             9)
                 echo "Viewing AKO logs..."
@@ -375,8 +375,8 @@ while true; do
                     kubectl delete ingress tls-avi-hello-nodeport-ingress -n default 2>/dev/null || true
                     kubectl delete hostrule hello-np-hr -n default 2>/dev/null || true
                     kubectl delete hostrule hello2-np-hr -n default 2>/dev/null || true
-                    kubectl delete secret hello-np.110.ams.avilab.eu -n default 2>/dev/null || true
-                    kubectl delete secret hello2-np.110.ams.avilab.eu -n default 2>/dev/null || true
+                    kubectl delete secret hello-np-tls.110.ams.avilab.eu -n default 2>/dev/null || true
+                    kubectl delete secret hello2-np-tls.110.ams.avilab.eu -n default 2>/dev/null || true
                     echo -e "${GREEN}All NodePort demo resources deleted.${NC}"
                 else
                     echo "Delete operation cancelled."
@@ -394,7 +394,7 @@ while true; do
                 echo "HostRules:"
                 kubectl get hostrules -n default | grep -E "(hello-np-hr|hello2-np-hr)" || echo "Not found"
                 echo "TLS Secrets:"
-                kubectl get secrets -n default | grep -E "(hello-np\.110\.ams\.avilab\.eu|hello2-np\.110\.ams\.avilab\.eu)" || echo "No TLS secrets found"
+                kubectl get secrets -n default | grep -E "(hello-np-tls\.110\.ams\.avilab\.eu|hello2-np-tls\.110\.ams\.avilab\.eu)" || echo "No TLS secrets found"
                 echo -n "Press any key to continue..."
                 read -n 1 -s
                 ;;

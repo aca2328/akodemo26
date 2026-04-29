@@ -14,13 +14,13 @@ spec:
   ingressClassName: avi-lb
   tls:
     - hosts:
-        - hello-np.110.ams.avilab.eu
-      secretName: hello-np.110.ams.avilab.eu
+        - hello-np-tls.110.ams.avilab.eu
+      secretName: hello-np-tls.110.ams.avilab.eu
     - hosts:
-        - hello2-np.110.ams.avilab.eu
-      secretName: hello2-np.110.ams.avilab.eu
+        - hello2-np-tls.110.ams.avilab.eu
+      secretName: hello2-np-tls.110.ams.avilab.eu
   rules:
-    - host: hello-np.110.ams.avilab.eu
+    - host: hello-np-tls.110.ams.avilab.eu
       http:
         paths:
           - path: /
@@ -30,7 +30,7 @@ spec:
                 name: avi-hello-nodeport-svc
                 port:
                   number: 80
-    - host: hello2-np.110.ams.avilab.eu
+    - host: hello2-np-tls.110.ams.avilab.eu
       http:
         paths:
           - path: /
