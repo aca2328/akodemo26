@@ -87,7 +87,7 @@ prepare_secrets_configuration() {
     echo "" # Newline
     if [[ "$edit_secrets" =~ ^[Yy]$ ]]; then
         if [ -f "$SECRETS_FILE" ]; then
-            vi "$SECRETS_FILE"
+            ${EDITOR:-vi} "$SECRETS_FILE"
         else
             echo -e "${RED}Error: $SECRETS_FILE not found. Cannot edit.${NC}"
         fi
@@ -98,7 +98,7 @@ prepare_secrets_configuration() {
 
 
 # ==========================================
-# 3. Install LogicRun config management before starting
+# Run config management before starting
 manage_configuration
 
 echo -e "${GREEN}--- AKO Manager (Version $TARGET_AKO_VERSION) ---${NC}"
@@ -135,7 +135,7 @@ check_dependencies() {
     if ! kubectl get crd gatewayclasses.gateway.networking.k8s.io &> /dev/null; then
         echo -e "${RED}Gateway API CRDs (GatewayClass) not found. Installing standard CRDs (v1.0.0)...${NC}"
         # Installing standard install from kubernetes-sigs which includes GatewayClass, Gateway, HTTPRoute etc.
-        kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+        kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
         
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}Gateway API CRDs installed successfully.${NC}"
@@ -148,7 +148,7 @@ check_dependencies() {
 }
 
 # ==========================================
-# 2. Configuration Management
+# 3. Configuration Management
 # ==========================================
 
 prepare_configuration() {
@@ -176,7 +176,7 @@ prepare_configuration() {
 }
 
 # ==========================================
-# 3. Install Logic
+# 4. Install Logic
 # ==========================================
 
 install_ako() {
@@ -191,7 +191,7 @@ install_ako() {
     # Check if namespace exists, create if not (handled by --create-namespace, but good to check context)
     echo "Deploying to namespace: $NAMESPACE"
 
-    helm install ako "${HELM_REPO_URL}/${HELM_REPO_NAME}" \
+    helm upgrade --install ako "${HELM_REPO_URL}/${HELM_REPO_NAME}" \
         --version $TARGET_AKO_VERSION \
         --namespace $NAMESPACE \
         --create-namespace \
@@ -207,7 +207,7 @@ install_ako() {
 }
 
 # ==========================================
-# 4. Uninstall Logic
+# 5. Uninstall Logic
 # ==========================================
 
 uninstall_ako() {
