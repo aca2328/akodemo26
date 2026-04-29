@@ -25,3 +25,13 @@ spec:
             name: avi-hello-nodeport-svc
             port:
               number: 80
+  - host: hello2-np.110.ams.avilab.eu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: avi-hello-nodeport-svc
+            port:
+              number: 80

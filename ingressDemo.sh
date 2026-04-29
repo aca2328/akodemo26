@@ -297,27 +297,33 @@ while true; do
         echo "=========================================="
         echo -e "  Ingress Demo — ${GREEN}NodePort mode${NC}"
         echo "=========================================="
-        echo "1. Deploy Deployment"
-        echo "2. Deploy NodePort Service"
+        echo "1. Deploy Demo Application (Deployment + NodePort Service)"
+        echo "2. Deploy LoadBalancer Service"
         echo "3. Deploy Ingress Resource"
-        echo "4. View AKO Logs"
+        echo "4. Deploy HostRule for hello-np.110.ams.avilab.eu"
+        echo "5. Deploy HostRule for hello2-np.110.ams.avilab.eu"
+        echo "6. Deploy TLS Ingress (Optional)"
+        echo "7. Manage TLS Secret for hello-np.110.ams.avilab.eu"
+        echo "8. Manage TLS Secret for hello2-np.110.ams.avilab.eu"
+        echo "9. View AKO Logs"
         echo "c. Toggle deleteConfig in avi-k8s-config"
         echo "v. Verify All Deployments"
         echo "d. Delete ALL Resources"
         echo "x. Exit"
         echo "=========================================="
-        echo -n "Press key (1-4, c, v, d, x): "
+        echo -n "Press key (1-9, c, v, d, x): "
         read -n 1 choice
         echo
 
         case $choice in
             1)
                 deploy_resource "avi-hello-nodeport" "nodeport/deployment.yaml" "deployment"
+                deploy_resource "avi-hello-nodeport-svc" "nodeport/service-nodeport.yaml" "service"
                 echo -n "Press any key to continue..."
                 read -n 1 -s
                 ;;
             2)
-                deploy_resource "avi-hello-nodeport-svc" "nodeport/service-nodeport.yaml" "service"
+                deploy_resource "avi-hello-l4" "ingress/svc.yaml" "service"
                 echo -n "Press any key to continue..."
                 read -n 1 -s
                 ;;
@@ -327,6 +333,27 @@ while true; do
                 read -n 1 -s
                 ;;
             4)
+                deploy_resource "hello-np-hr" "nodeport/hello-np-hostrule.yaml" "hostrule"
+                echo -n "Press any key to continue..."
+                read -n 1 -s
+                ;;
+            5)
+                deploy_resource "hello2-np-hr" "nodeport/hello2-np-hostrule.yaml" "hostrule"
+                echo -n "Press any key to continue..."
+                read -n 1 -s
+                ;;
+            6)
+                deploy_resource "tls-avi-hello-nodeport-ingress" "nodeport/tls-ingress.yaml" "ingress"
+                echo -n "Press any key to continue..."
+                read -n 1 -s
+                ;;
+            7)
+                manage_tls_secret "hello-np.110.ams.avilab.eu" "hello-np.110.ams.avilab.eu"
+                ;;
+            8)
+                manage_tls_secret "hello2-np.110.ams.avilab.eu" "hello2-np.110.ams.avilab.eu"
+                ;;
+            9)
                 echo "Viewing AKO logs..."
                 echo "=========================================="
                 kubectl logs ako-0 -n avi-system --tail=50
@@ -343,7 +370,13 @@ while true; do
                 if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
                     kubectl delete deployment avi-hello-nodeport -n default 2>/dev/null || true
                     kubectl delete service avi-hello-nodeport-svc -n default 2>/dev/null || true
+                    kubectl delete service avi-hello-l4 -n default 2>/dev/null || true
                     kubectl delete ingress avi-hello-nodeport-ingress -n default 2>/dev/null || true
+                    kubectl delete ingress tls-avi-hello-nodeport-ingress -n default 2>/dev/null || true
+                    kubectl delete hostrule hello-np-hr -n default 2>/dev/null || true
+                    kubectl delete hostrule hello2-np-hr -n default 2>/dev/null || true
+                    kubectl delete secret hello-np.110.ams.avilab.eu -n default 2>/dev/null || true
+                    kubectl delete secret hello2-np.110.ams.avilab.eu -n default 2>/dev/null || true
                     echo -e "${GREEN}All NodePort demo resources deleted.${NC}"
                 else
                     echo "Delete operation cancelled."
@@ -355,9 +388,13 @@ while true; do
                 echo "Deployments:"
                 kubectl get deployments -n default | grep avi-hello-nodeport || echo "Not found"
                 echo "Services:"
-                kubectl get services -n default | grep avi-hello-nodeport || echo "Not found"
+                kubectl get services -n default | grep -E "(avi-hello-nodeport|avi-hello-l4)" || echo "Not found"
                 echo "Ingress:"
-                kubectl get ingress -n default | grep avi-hello-nodeport-ingress || echo "Not found"
+                kubectl get ingress -n default | grep -E "(avi-hello-nodeport-ingress|tls-avi-hello-nodeport-ingress)" || echo "Not found"
+                echo "HostRules:"
+                kubectl get hostrules -n default | grep -E "(hello-np-hr|hello2-np-hr)" || echo "Not found"
+                echo "TLS Secrets:"
+                kubectl get secrets -n default | grep -E "(hello-np\.110\.ams\.avilab\.eu|hello2-np\.110\.ams\.avilab\.eu)" || echo "No TLS secrets found"
                 echo -n "Press any key to continue..."
                 read -n 1 -s
                 ;;

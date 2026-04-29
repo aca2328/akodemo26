@@ -1,0 +1,42 @@
+# ---------------------------------------------------------------------------
+# TLS Ingress: NodePort mode
+# Requires TLS secrets hello-np.110.ams.avilab.eu and hello2-np.110.ams.avilab.eu
+# to be created first (menu option 7 and 8).
+# ---------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tls-avi-hello-nodeport-ingress
+  namespace: default
+  annotations:
+    ako.vmware.com/enable-tls: "false"
+spec:
+  ingressClassName: avi-lb
+  tls:
+    - hosts:
+        - hello-np.110.ams.avilab.eu
+      secretName: hello-np.110.ams.avilab.eu
+    - hosts:
+        - hello2-np.110.ams.avilab.eu
+      secretName: hello2-np.110.ams.avilab.eu
+  rules:
+    - host: hello-np.110.ams.avilab.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: avi-hello-nodeport-svc
+                port:
+                  number: 80
+    - host: hello2-np.110.ams.avilab.eu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: avi-hello-nodeport-svc
+                port:
+                  number: 80
