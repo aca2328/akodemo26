@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avi-hello-nodeport
+  namespace: default
+  labels:
+    app: avi-hello-nodeport
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: avi-hello-nodeport
+  template:
+    metadata:
+      labels:
+        app: avi-hello-nodeport
+    spec:
+      containers:
+      - name: hello
+        image: nginxdemos/hello:plain-text
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "32Mi"
+          limits:
+            cpu: "50m"
+            memory: "64Mi"

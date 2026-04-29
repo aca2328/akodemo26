@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Ingress: NodePort mode (Layer 7)
+# AKO reads the NodePort allocated on avi-hello-nodeport-svc and programs
+# the Avi Virtual Service pool with <nodeIP>:<nodePort> members.
+# Requires: AKOSettings.serviceType = NodePort in ako-values.yaml
+# NOTE: Update the hostnames below to match your lab DNS / VIP network.
+# ---------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: avi-hello-nodeport-ingress
+  namespace: default
+  annotations:
+    ako.vmware.com/enable-tls: "false"
+spec:
+  ingressClassName: avi-lb
+  rules:
+  - host: hello-np.110.ams.avilab.eu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: avi-hello-nodeport-svc
+            port:
+              number: 80

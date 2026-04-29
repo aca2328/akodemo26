@@ -1,0 +1,24 @@
+# ---------------------------------------------------------------------------
+# Service: NodePort
+# In AKO NodePort mode (serviceType: NodePort in ako-values.yaml), AKO uses
+# each node's IP + the allocated NodePort as pool members on the Avi SE,
+# bypassing kube-proxy / CNI overlay routing.
+# ---------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: avi-hello-nodeport-svc
+  namespace: default
+  labels:
+    app: avi-hello-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+    # nodePort is intentionally omitted — Kubernetes assigns a port from the
+    # default range (30000-32767). Pin it here if a fixed port is required.
+  selector:
+    app: avi-hello-nodeport
