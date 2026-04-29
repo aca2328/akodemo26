@@ -323,7 +323,7 @@ while true; do
                 read -n 1 -s
                 ;;
             2)
-                deploy_resource "avi-hello-l4" "ingress/svc.yaml" "service"
+                deploy_resource "avi-hello-nodeport-l4" "nodeport/svc-loadbalancer.yaml" "service"
                 echo -n "Press any key to continue..."
                 read -n 1 -s
                 ;;
@@ -370,7 +370,7 @@ while true; do
                 if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
                     kubectl delete deployment avi-hello-nodeport -n default 2>/dev/null || true
                     kubectl delete service avi-hello-nodeport-svc -n default 2>/dev/null || true
-                    kubectl delete service avi-hello-l4 -n default 2>/dev/null || true
+                    kubectl delete service avi-hello-nodeport-l4 -n default 2>/dev/null || true
                     kubectl delete ingress avi-hello-nodeport-ingress -n default 2>/dev/null || true
                     kubectl delete ingress tls-avi-hello-nodeport-ingress -n default 2>/dev/null || true
                     kubectl delete hostrule hello-np-hr -n default 2>/dev/null || true
@@ -388,7 +388,7 @@ while true; do
                 echo "Deployments:"
                 kubectl get deployments -n default | grep avi-hello-nodeport || echo "Not found"
                 echo "Services:"
-                kubectl get services -n default | grep -E "(avi-hello-nodeport|avi-hello-l4)" || echo "Not found"
+                kubectl get services -n default | grep avi-hello-nodeport || echo "Not found"
                 echo "Ingress:"
                 kubectl get ingress -n default | grep -E "(avi-hello-nodeport-ingress|tls-avi-hello-nodeport-ingress)" || echo "Not found"
                 echo "HostRules:"
