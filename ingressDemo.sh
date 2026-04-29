@@ -103,6 +103,45 @@ manage_tls_secret() {
     return 0
 }
 
+toggle_delete_config() {
+    local ns="avi-system"
+    local cm="avi-k8s-config"
+
+    if ! kubectl get configmap $cm -n $ns &> /dev/null; then
+        echo -e "${RED}ConfigMap $cm not found in namespace $ns.${NC}"
+        echo -n "Press any key to continue..."
+        read -n 1 -s
+        return 1
+    fi
+
+    local current
+    current=$(kubectl get configmap $cm -n $ns -o jsonpath='{.data.deleteConfig}')
+    echo -e "Current ${YELLOW}deleteConfig${NC} = ${YELLOW}${current}${NC}"
+
+    local new_val
+    if [ "$current" = "true" ]; then
+        new_val="false"
+    else
+        new_val="true"
+    fi
+
+    echo -n "Toggle to \"$new_val\"? (y/n): "
+    read -n 1 confirm
+    echo
+    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+        kubectl patch configmap $cm -n $ns --type merge -p "{\"data\":{\"deleteConfig\":\"$new_val\"}}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}deleteConfig set to \"$new_val\".${NC}"
+        else
+            echo -e "${RED}Failed to patch ConfigMap.${NC}"
+        fi
+    else
+        echo "No change made."
+    fi
+    echo -n "Press any key to continue..."
+    read -n 1 -s
+}
+
 # ==========================================
 # Mode selection
 # ==========================================
@@ -151,11 +190,12 @@ while true; do
         echo "7. Manage TLS Secret for hello.110.ams.avilab.eu"
         echo "8. Manage TLS Secret for hello2.110.ams.avilab.eu"
         echo "9. View AKO Logs"
+        echo "c. Toggle deleteConfig in avi-k8s-config"
         echo "v. Verify All Deployments"
         echo "d. Delete ALL Resources"
         echo "x. Exit"
         echo "=========================================="
-        echo -n "Press key (1-9, v, d, x): "
+        echo -n "Press key (1-9, c, v, d, x): "
         read -n 1 choice
         echo
 
@@ -203,6 +243,9 @@ while true; do
                 echo "=========================================="
                 echo -n "Press any key to continue..."
                 read -n 1 -s
+                ;;
+            c|C)
+                toggle_delete_config
                 ;;
             d|D)
                 echo -e "${YELLOW}Deleting ALL ClusterIP demo resources...${NC}"
@@ -258,11 +301,12 @@ while true; do
         echo "2. Deploy NodePort Service"
         echo "3. Deploy Ingress Resource"
         echo "4. View AKO Logs"
+        echo "c. Toggle deleteConfig in avi-k8s-config"
         echo "v. Verify All Deployments"
         echo "d. Delete ALL Resources"
         echo "x. Exit"
         echo "=========================================="
-        echo -n "Press key (1-4, v, d, x): "
+        echo -n "Press key (1-4, c, v, d, x): "
         read -n 1 choice
         echo
 
@@ -289,6 +333,9 @@ while true; do
                 echo "=========================================="
                 echo -n "Press any key to continue..."
                 read -n 1 -s
+                ;;
+            c|C)
+                toggle_delete_config
                 ;;
             d|D)
                 echo -e "${YELLOW}Deleting ALL NodePort demo resources...${NC}"
