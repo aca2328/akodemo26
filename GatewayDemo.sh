@@ -2,6 +2,50 @@
 
 # Interactive menu for deploying Kubernetes resources in the gatewayapi directory
 
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+toggle_delete_config() {
+    local ns="avi-system"
+    local cm="avi-k8s-config"
+
+    if ! kubectl get configmap $cm -n $ns &> /dev/null; then
+        echo -e "${RED}ConfigMap $cm not found in namespace $ns.${NC}"
+        echo -n "Press any key to continue..."
+        read -n 1 -s
+        return 1
+    fi
+
+    local current
+    current=$(kubectl get configmap $cm -n $ns -o jsonpath='{.data.deleteConfig}')
+    echo -e "Current ${YELLOW}deleteConfig${NC} = ${YELLOW}${current}${NC}"
+
+    local new_val
+    if [ "$current" = "true" ]; then
+        new_val="false"
+    else
+        new_val="true"
+    fi
+
+    echo -n "Toggle to \"$new_val\"? (y/n): "
+    read -n 1 confirm
+    echo
+    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+        kubectl patch configmap $cm -n $ns --type merge -p "{\"data\":{\"deleteConfig\":\"$new_val\"}}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}deleteConfig set to \"$new_val\".${NC}"
+        else
+            echo -e "${RED}Failed to patch ConfigMap.${NC}"
+        fi
+    else
+        echo "No change made."
+    fi
+    echo -n "Press any key to continue..."
+    read -n 1 -s
+}
+
 # Function to deploy a resource
 deploy_resource() {
     local resource_name=$1
@@ -45,10 +89,11 @@ while true; do
     echo "k. Deploy AVIInfrasetting"
     echo "m. Verify All Deployments"
     echo "n. View AKO Logs"
+    echo "t. Toggle deleteConfig in avi-k8s-config"
     echo "x. Delete ALL Resources"
     echo "z. Exit"
     echo "=========================================="
-    echo -n "Press key (a-z, m, n, x, z): "
+    echo -n "Press key (a-k, m, n, t, x, z): "
     read -n 1 choice
     echo
 
@@ -228,6 +273,9 @@ while true; do
             echo "=========================================="
             echo -n "Press any key to continue..."
             read -n 1 -s
+            ;;
+        t|T)
+            toggle_delete_config
             ;;
         x|X)
             echo "Deleting ALL gateway resources..."
